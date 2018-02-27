@@ -1,28 +1,28 @@
 import React from 'react';
-import {Alert, View, Text, TextInput, StyleSheet} from 'react-native';
-import {RkButton, RkTextInput} from 'react-native-ui-kitten';
+import {Alert, View, Text, TextInput, StyleSheet, Button } from 'react-native';
 
 export default class Add extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      text: "Erkki"
-    }
-  }
 
   handleSubmit() {
-   Alert.alert(this.state.name);
+   const workout = {
+     name: this.state.name,
+     reps: this.state.reps,
+     weight: this.state.weight
+   };
+
+   this.props.add(workout);
   }
+
   render() {
+
     return (
       <View style={styles.container}>
         <View style={styles.inputs}>
-          <RkTextInput placeholder='Liikkeen nimi' name="name" onChangeText={(name) => this.setState({name})}/>
-          <RkTextInput placeholder='Toistomäärä' name="reps" onChangeText={(reps) => this.setState({reps})}/>
-          <RkTextInput placeholder='Aloituspaino' name="weight" onChangeText={(weight) => this.setState({weight})}/>
+          <TextInput placeholder='Liike' name="name" onChangeText={(name) => this.setState({name})}/>
+          <TextInput placeholder='Toistot' name="reps" onChangeText={(reps) => this.setState({reps})}/>
+          <TextInput placeholder='Aloituspaino' name="weight" onChangeText={(weight) => this.setState({weight})}/>
         </View>
-        <RkButton onPress={this.handleSubmit.bind(this)}>Mikä on nimi?</RkButton>
-        <Text></Text>
+        <Button onPress={this.handleSubmit.bind(this)} title="Tallenna"/>
       </View>
     );
   }

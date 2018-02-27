@@ -1,6 +1,9 @@
 import React from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
+import {Text, View, StyleSheet, Button, Dimensions} from 'react-native';
 import _ from 'lodash';
+
+import Colors from 'src/js/constants/Colors';
+
 
 export default class List extends React.Component {
   
@@ -9,17 +12,25 @@ export default class List extends React.Component {
 
     const list = workouts.map(workout => {
       return (
-        <View key={_.uniqueId()} style={styles.listItem}>
-          <Text>{workout.name}</Text>
-          <Text>{workout.reps}</Text>
-          <Text>{workout.weight}</Text>
-          <Button title="Poista" onPress={() => this.props.remove(workout)}></Button>
+        <View key={_.uniqueId()} style={styles.itemContainer}>
+          <Text style={[styles.itemName]}>{workout.name}</Text>
+          <Text style={styles.itemBase}>{workout.reps}</Text>
+          <Text style={styles.itemBase}>{workout.weight}</Text>
+          <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
         </View>
       );
     });
 
     return (
       <View style={styles.container}>
+        <View style={styles.itemContainer}>
+          <Text style={[styles.itemName, {fontSize: 20}]}>Liike</Text>
+          <Text style={[styles.itemBase, {fontSize: 20}]}>Toistot</Text>
+          <Text style={[styles.itemBase, {fontSize: 20}]}>Paino</Text>
+          <View style={{opacity: 0}}>
+            <Button title=" x "></Button>
+          </View>
+        </View>
         {list}
       </View>
     );
@@ -30,11 +41,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    backgroundColor: Colors.Lighter
   },
-  listItem: {
+  itemContainer: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minWidth: Dimensions.get('window').width * 0.75,
+    maxHeight: Dimensions.get('window').height * 0.06,
+    backgroundColor: Colors.Darker,
+    paddingLeft: 5,
+    paddingRight: 15,
+    marginBottom: 2
+  },
+  itemBase: {
+    flex: 0.3,
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  itemName: {
+    flex: 0.4,
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#FFFFFF'
   }
 })

@@ -26,7 +26,7 @@ export default class Add extends React.Component {
           <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Aloituspaino' placeholderTextColor='#FFFFFF'name="weight" onChangeText={(weight) => this.setState({weight})} keyboardType='numeric'/>
         </View>
         <View>
-          <Button color={Colors.Lightest} onPress={this.handleSubmit.bind(this)} title="Tallenna"/>
+          <Button color={Colors.Green} onPress={this.handleSubmit.bind(this)} title=" Lisää "/>
         </View>
       </View>
     );

@@ -1,5 +1,8 @@
 import React from 'react';
-import {Alert, View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import { View, TextInput, StyleSheet, Button } from 'react-native';
+
+import Colors from 'src/js/constants/Colors';
+
 
 export default class Add extends React.Component {
 
@@ -18,25 +21,41 @@ export default class Add extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.inputs}>
-          <TextInput placeholder='Liike' name="name" onChangeText={(name) => this.setState({name})}/>
-          <TextInput placeholder='Toistot' name="reps" onChangeText={(reps) => this.setState({reps})}/>
-          <TextInput placeholder='Aloituspaino' name="weight" onChangeText={(weight) => this.setState({weight})}/>
+          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Liike' placeholderTextColor='#FFFFFF' name="name" onChangeText={(name) => this.setState({name})}/>
+          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Toistot' placeholderTextColor='#FFFFFF' name="reps" onChangeText={(reps) => this.setState({reps})} keyboardType='numeric'/>
+          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Aloituspaino' placeholderTextColor='#FFFFFF'name="weight" onChangeText={(weight) => this.setState({weight})} keyboardType='numeric'/>
         </View>
-        <Button onPress={this.handleSubmit.bind(this)} title="Tallenna"/>
+        <View>
+          <Button color={Colors.Lightest} onPress={this.handleSubmit.bind(this)} title="Tallenna"/>
+        </View>
       </View>
     );
   }
 };
 
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.3,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: Colors.Darkest,
   },
   inputs: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+  },
+  textInput: {
+    backgroundColor: Colors.Lighter,
+    color: '#FFFFFF',
+    margin: 5,
+    padding: 5,
+    flex: 0.3,
+  },
+  button: {
+    color: Colors.Middle,
   }
 })
+
+

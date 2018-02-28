@@ -2,18 +2,22 @@ import React from 'react';
 import { View, TextInput, StyleSheet, Button } from 'react-native';
 
 import Colors from 'src/js/constants/Colors';
-
+import AddInput from './inputs/AddInput';
 
 export default class Add extends React.Component {
 
-  handleSubmit() {
-   const workout = {
-     name: this.state.name,
-     reps: this.state.reps,
-     weight: this.state.weight
-   };
+  constructor() {
+    super();
+    this.state = {
+      name: null,
+      reps: null,
+      weight: null
+    }
+    this.baseState = this.state;
 
-   this.props.add(workout);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleRepsChange = this.handleRepsChange.bind(this);
+    this.handleWeightChange = this.handleWeightChange.bind(this);
   }
 
   render() {
@@ -21,16 +25,42 @@ export default class Add extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.inputs}>
-          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Liike' placeholderTextColor='#FFFFFF' name="name" onChangeText={(name) => this.setState({name})}/>
-          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Toistot' placeholderTextColor='#FFFFFF' name="reps" onChangeText={(reps) => this.setState({reps})} keyboardType='numeric'/>
-          <TextInput style={styles.textInput} underlineColorAndroid='transparent' placeholder='Aloituspaino' placeholderTextColor='#FFFFFF'name="weight" onChangeText={(weight) => this.setState({weight})} keyboardType='numeric'/>
+          {/* <TextInput ref={(input) => {this.textInput = input}} style={styles.textInput} value={this.state.name} underlineColorAndroid='transparent' placeholder='Liike' placeholderTextColor='#FFFFFF' name="name" onChangeText={this.handleNameChange.bind(this)}/> */}
+          <AddInput inputRef={el => this.inputElement = el} value={this.state.name} style={styles.textInput} placeholder='Liike' handleChange={this.handleNameChange.bind(this)}/>
+          <AddInput style={styles.textInput} value={this.state.reps} placeholder='Toistot' handleChange={this.handleRepsChange.bind(this)}/>
+          <AddInput style={styles.textInput} value={this.state.weight} placeholder='Paino' handleChange={this.handleWeightChange.bind(this)}/>
         </View>
         <View>
-          <Button color={Colors.Green} onPress={this.handleSubmit.bind(this)} title=" Lisää "/>
+          <Button color={Colors.Green} onPress={this.handleSubmit.bind(this)} disabled={!this.state.name} title=" Lisää "/>
         </View>
       </View>
     );
   }
+
+  handleNameChange(name) {
+    this.setState({name});
+  }
+
+  handleRepsChange(reps) {
+    this.setState({reps});
+  }
+
+  handleWeightChange(weight) {
+    this.setState({weight});
+  }
+
+  handleSubmit() {
+    const workout = {
+      name: this.state.name,
+      reps: this.state.reps,
+      weight: this.state.weight
+    };
+    
+    this.setState(this.baseState);
+    this.props.add(workout);
+    this.inputElement.focus();
+   }
+ 
 };
 
 

@@ -5,7 +5,7 @@ export default class Header extends React.Component {
   render() {
     return(
       <View style={styles.container}>
-        <Text style={styles.title}>Salihelpperi</Text>
+        <Text style={styles.title}>{this.props.title}</Text>
       </View>
     );
   }

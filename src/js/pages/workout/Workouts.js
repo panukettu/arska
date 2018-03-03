@@ -17,12 +17,6 @@ export default class Workouts extends React.Component {
     this.save = this.save.bind(this);
     this.remove = this.remove.bind(this);
   }
-
-  componentWillMount() {
-    this.get().then(workouts => {
-      this.setState({workouts});
-    });
-  }
   
   get = async () => {
     try {
@@ -66,6 +60,14 @@ export default class Workouts extends React.Component {
         <List remove={this.remove.bind(this)} workouts={this.state.workouts}/>
       </View>
     );
+  }
+
+  componentDidMount() {
+    this.get().then(workouts => {
+      if(workouts) {
+        this.setState({workouts});
+      }
+    });
   }
 }
 

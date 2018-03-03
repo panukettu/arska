@@ -9,11 +9,20 @@ export default class List extends React.Component {
   
   render() {
     const { workouts } = this.props;
+      
+    if(!workouts || workouts.length === 0) { 
+      return (
+        <View style={styles.container}>
+          <Text style={styles.addTitle}>
+            Lisää liike ylempää!
+          </Text>
+        </View>); 
+    };
 
     const list = workouts.map(workout => {
       return (
         <View key={_.uniqueId()} style={styles.itemContainer}>
-          <Text style={[styles.itemName]}>{workout.name}</Text>
+          <Text style={styles.itemName}>{workout.name}</Text>
           <Text style={styles.itemBase}>{workout.reps}</Text>
           <Text style={styles.itemBase}>{workout.weight}</Text>
           <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
@@ -28,7 +37,7 @@ export default class List extends React.Component {
           <Text style={[styles.itemBase, {fontSize: 20}]}>Toistot</Text>
           <Text style={[styles.itemBase, {fontSize: 20}]}>Paino</Text>
           <View style={{opacity: 0}}>
-            <Button title=" x "></Button>
+            <Button title=" x " onPress={() => e.preventDefault}></Button>
           </View>
         </View>
         {list}
@@ -65,6 +74,14 @@ const styles = StyleSheet.create({
     flex: 0.4,
     fontSize: 15,
     fontWeight: 'bold',
+    color: '#FFFFFF'
+  },
+  addTitle: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: 20,
     color: '#FFFFFF'
   }
 })

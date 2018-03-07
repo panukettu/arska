@@ -24,9 +24,12 @@ it('workouts renders', () => {
 
 test('list renders without workouts', () => {
   const rendered = renderer.create(<List/>).toJSON();
+  expect(rendered).toBeTruthy();
 });
 
 test('list renders with workouts', () => {
   const workouts = [{name: 'test', reps: '10', weight: '10'}];
   const rendered = renderer.create(<List workouts={workouts}/>).toJSON();
+
+  expect(rendered).toBeTruthy();
 });

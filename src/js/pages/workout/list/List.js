@@ -3,25 +3,30 @@ import {Text, View, StyleSheet, Button, Dimensions} from 'react-native';
 import _ from 'lodash';
 
 import Colors from 'src/js/constants/Colors';
+import TitleBar from './TitleBar';
 
 
 export default class List extends React.Component {
   
   render() {
     const { workouts } = this.props;
-      
+     
     if(!workouts || workouts.length === 0) { 
       return (
         <View style={styles.container}>
-          <Text style={styles.addTitle}>
-            Lisää liike ylempää!
+          <TitleBar/>
+          <Text testID='emptyListText' style={styles.addTitle}>
+            Lisää liikkeitä!
           </Text>
-        </View>); 
+        </View>
+      ); 
     };
 
+    // each workout needs its own row, use map to get the jsx
     const list = workouts.map(workout => {
       return (
-        <View key={_.uniqueId()} style={styles.itemContainer}>
+        // and a unique key!
+        <View key={_.uniqueId()} style={styles.row}>
           <Text style={styles.itemName}>{workout.name}</Text>
           <Text style={styles.itemBase}>{workout.reps}</Text>
           <Text style={styles.itemBase}>{workout.weight}</Text>
@@ -32,14 +37,7 @@ export default class List extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.itemContainer}>
-          <Text style={[styles.itemName, {fontSize: 20}]}>Liike</Text>
-          <Text style={[styles.itemBase, {fontSize: 20}]}>Toistot</Text>
-          <Text style={[styles.itemBase, {fontSize: 20}]}>Paino</Text>
-          <View style={{opacity: 0}}>
-            <Button title=" x " onPress={() => e.preventDefault}></Button>
-          </View>
-        </View>
+        <TitleBar/>
         {list}
       </View>
     );
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: Colors.Lighter
   },
-  itemContainer: {
+  row: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -78,10 +76,10 @@ const styles = StyleSheet.create({
   },
   addTitle: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    fontSize: 20,
+    flexDirection: 'row',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 30,
     color: '#FFFFFF'
   }
 })

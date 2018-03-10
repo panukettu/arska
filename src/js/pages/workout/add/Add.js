@@ -21,20 +21,23 @@ export default class Add extends React.Component {
   }
 
   render() {
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.inputs}>
-          {/* <TextInput ref={(input) => {this.textInput = input}} style={styles.textInput} value={this.state.name} underlineColorAndroid='transparent' placeholder='Liike' placeholderTextColor='#FFFFFF' name="name" onChangeText={this.handleNameChange.bind(this)}/> */}
-          <AddInput inputRef={el => this.inputElement = el} value={this.state.name} style={styles.textInput} placeholder='Liike' handleChange={this.handleNameChange.bind(this)}/>
-          <AddInput style={styles.textInput} value={this.state.reps} placeholder='Toistot' handleChange={this.handleRepsChange.bind(this)}/>
-          <AddInput style={styles.textInput} value={this.state.weight} placeholder='Paino' handleChange={this.handleWeightChange.bind(this)}/>
+    if(!this.props.shouldRender) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.inputs}>
+            {/* <TextInput ref={(input) => {this.textInput = input}} style={styles.textInput} value={this.state.name} underlineColorAndroid='transparent' placeholder='Liike' placeholderTextColor='#FFFFFF' name="name" onChangeText={this.handleNameChange.bind(this)}/> */}
+            <AddInput inputRef={el => this.inputElement = el} value={this.state.name} style={styles.textInput} placeholder='Liike' handleChange={this.handleNameChange.bind(this)}/>
+            <AddInput style={styles.textInput} value={this.state.reps} placeholder='Toistot' handleChange={this.handleRepsChange.bind(this)}/>
+            <AddInput style={styles.textInput} value={this.state.weight} placeholder='Paino' handleChange={this.handleWeightChange.bind(this)}/>
+          </View>
+          <View>
+            <Button color={Colors.Green} onPress={this.handleSubmit.bind(this)} disabled={!this.state.name} title=" Lisää "/>
+          </View>
         </View>
-        <View>
-          <Button color={Colors.Green} onPress={this.handleSubmit.bind(this)} disabled={!this.state.name} title=" Lisää "/>
-        </View>
-      </View>
-    );
+      );
+    } else {
+      return <Button title="Uusi treeni?" onPress={this.props.initNew}/>;
+    }
   }
 
   handleNameChange(name) {

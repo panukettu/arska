@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, View, Button, AsyncStorage, Text, Modal, Picker} from 'react-native';
 
+import _ from 'lodash';
+
 import Add from './add/Add';
 import Footer from './footer/Footer';
 import List from './list/List';
@@ -13,34 +15,43 @@ export default class Workouts extends React.Component {
     super();
     
     this.state = {
-      workouts: [],
-      currentRoutine: [],
+      currentRoutine: null,
       routines: [],
+      workouts: [],
       askRoutineName: false
     }
-
-    this.get = this.get.bind(this);
-    this.save = this.save.bind(this);
-    this.remove = this.remove.bind(this);
   }
-  
-  get = async () => {
-    try {
-      let workouts = await AsyncStorage.getItem("workouts");
-      return JSON.parse(workouts);
-    }
-    catch(err) {
-      alert("Virhe");
-    }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Add add={this.add.bind(this)} shouldRender={this.state.currentRoutine} initNew={this.init.bind(this)}/>
+        <RoutinePicker routines={this.state.routines} handleChange={this.set.bind(this)} handleDelete={this.deleteRoutine.bind(this)}/>
+        <List remove={this.remove.bind(this)} workouts={this.state.workouts}/>
+        <Footer askName={this.state.askRoutineName} handleSubmit={this.save.bind(this)}/>
+      </View>
+    );
+  }
+
+  componentDidMount() {
+    getRoutines().then(routines => {
+      if(routines) {
+        this.setState({routines});
+      }
+    });
+  }
+
+  init() {
+    this.setState({currentRoutine: null, workouts: []});
   }
 
   add(workout) {
-    let workouts = this.state.workouts;
+    let workouts = this.state.workouts.slice();
     let index = workouts.findIndex(w => w.name == workout.name);
-
+    
     if(index === -1) { 
       workouts.push(workout);
-      this.save(workouts);
+      this.setState({workouts: workouts});
     } 
     else {
       alert('Liike on jo listassaa!');
@@ -49,67 +60,54 @@ export default class Workouts extends React.Component {
 
   remove(workout) {
       // clone the array since it's used as a datasource
-      let workouts = this.state.workouts.map(w => w); 
+      let workouts = this.state.workouts.slice();
       let index = workouts.findIndex(w => w.name == workout.name);
       workouts.splice(index, 1);
-      this.save(workouts);
+      this.setState({workouts});
   }
 
-  save(workouts) {
-    AsyncStorage.setItem("workouts", JSON.stringify(workouts));
-    this.setState({workouts});
+  set(routine) {
+    this.setState({currentRoutine: routine, workouts: routine.workouts});
   }
 
-  setRoutine(routine) {
-    this.save(routine.workouts);
-    this.setState({currentRoutine: routine});
-  }
+  save(name) {
 
-  routineDone(name) {
     if(!name) {
       this.setState({askRoutineName: true});
     } 
     else {
+
+      let workouts = this.state.workouts.slice();
+      let routines = this.state.routines.slice();
+
       let obj = {
+        id: _.uniqueId(),
         name: name,
-        workouts: this.state.workouts,
+        workouts: workouts
       }
+      
+      routines.push(obj);
       setRoutine(obj);
-      this.state.routines.push(obj);
-      this.setState({routines: this.state.routines, askRoutineName: false});
+      this.setState({routines: routines, currentRoutine: obj, workouts: obj.workouts, askRoutineName: false});
     }
   }
 
   deleteRoutine() {
-    let routines = this.state.routines.map(r => r);
+    console.log('Routine DELETE: CALLED');
+    let routines = this.state.routines;
     let index = routines.findIndex(r => r.id == this.state.currentRoutine.id);
+
+    console.log('Routine DELETE: ' + routines[index].name);
     routines.splice(index, 1);
-    this.setState({routines});
+    console.log('Routine DELETE: routines left' + routines.length); 
+    if(routines.length > 0) {
+      this.setState({routines, currentRoutine: routines[index - 1]});
+    } else {
+      this.setState({routines, currentRoutine: null, workouts: []});
+    }
+
     removeRoutine(this.state.currentRoutine.id);
-  }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Add add={this.add.bind(this)}/>
-        <RoutinePicker routines={this.state.routines} handleChange={this.setRoutine.bind(this)}/>
-        <List remove={this.remove.bind(this)} workouts={this.state.workouts}/>
-        <Button onPress={this.deleteRoutine.bind(this)} title="Poista rutiini"/>
-        <Footer askName={this.state.askRoutineName} handleSubmit={this.routineDone.bind(this)}/>
-      </View>
-    );
-  }
-
-  componentDidMount() {
-    this.get().then(workouts => {
-      if(workouts) {
-        this.setState({workouts});
-      }
-    });
-
-    getRoutines().then(routines => {
-      this.setState({routines});
-    });
   }
 }
 

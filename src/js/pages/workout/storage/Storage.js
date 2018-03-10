@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 export const setRoutine = (routine) => {
   getRoutines().then(res => {
-    routine.id = _.uniqueId();
     res.push(routine);
     AsyncStorage.setItem('routines', JSON.stringify(res));
   });

@@ -27,7 +27,7 @@ export default class Workouts extends React.Component {
     return (
       <View style={styles.container}>
         <Add add={this.add.bind(this)} shouldRender={this.state.currentRoutine} initNew={this.init.bind(this)}/>
-        <RoutinePicker routines={this.state.routines} handleChange={this.set.bind(this)} deleteRoutine={this.deleteRoutine.bind(this)}/>
+        <RoutinePicker routines={this.state.routines} selectedRoutine={this.state.currentRoutine} handleChange={this.set.bind(this)} deleteRoutine={this.deleteRoutine.bind(this)}/>
         <List remove={this.remove.bind(this)} workouts={this.state.workouts} handleChange={this.handleChange.bind(this)}/>
         <Footer askName={this.state.askRoutineName} handleSubmit={this.save.bind(this)} showInit={this.state.currentRoutine} initNew={this.init.bind(this)}/>
       </View>
@@ -113,11 +113,13 @@ export default class Workouts extends React.Component {
 
   updateAndSave(routine) {
     console.log('UpdateAndSave calling updateRoutine with: ' + JSON.stringify(routine));
-    updateRoutine(routine);
+
     let routines = this.state.routines.slice();
     let index = routines.findIndex(r => r.id === routine.id);
     routines[index] = routine;
     this.setState({routines, currentRoutine: routine, workouts: routine.workouts});
+
+    updateRoutine(routine);
   }
 
   handleChange(item) {

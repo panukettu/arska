@@ -9,15 +9,13 @@ export default class RoutinePicker extends React.Component {
   constructor() {
     super();
     this.state = {
-      currrentRoutine: [],
       routines: []
     }
   }
 
-  handleChange(routine) {
-    console.log('RoutinePicker PICK: ' + routine.name);
+  handleChange(routine, index) {
+    console.log('RutinePicker HANDLECHANGE FIRE' + index);
     this.props.handleChange(routine);
-    this.setState({currentRoutine: routine});
   }
 
   handleSubmit() {
@@ -26,6 +24,7 @@ export default class RoutinePicker extends React.Component {
 
   render() {
     console.log('RoutinePicker RENDERING: ' + this.props.routines.length + ' routine(s)');
+    console.log('RoutinePicker SELECTEDVALUE: ' + JSON.stringify(this.props.selectedRoutine));
     if(this.props.routines.length > 0) {
       // create list of picker items here
       var pickerItems = this.props.routines.map(routine => {
@@ -37,8 +36,8 @@ export default class RoutinePicker extends React.Component {
         <View>
           <Picker
             style={styles.picker}
-            selectedValue={this.state.currentRoutine}
-            onValueChange={itemValue => this.handleChange(itemValue)}>
+            selectedValue={this.props.selectedRoutine}
+            onValueChange={(item, index) => this.handleChange(item, index)}>
             {pickerItems}
           </Picker>
           <Button title="Poista treeni" onPress={() => this.handleSubmit()}/>

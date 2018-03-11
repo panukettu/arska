@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet, Button, Dimensions} from 'react-native';
+import {Text, View, StyleSheet, Button, Dimensions, TextInput} from 'react-native';
 import _ from 'lodash';
 
 import Colors from 'src/js/constants/Colors';
@@ -8,6 +8,13 @@ import TitleBar from './TitleBar';
 
 export default class List extends React.Component {
   
+  constructor() {
+    super();
+    this.state = {
+      editable: false
+    }
+  }
+
   render() {
     const { workouts } = this.props;
      
@@ -24,15 +31,25 @@ export default class List extends React.Component {
 
     // each workout needs its own row, use map to get the jsx
     const list = workouts.map(workout => {
-      return (
-        // and a unique key!
-        <View key={_.uniqueId()} style={styles.row}>
-          <Text style={styles.itemName}>{workout.name}</Text>
-          <Text style={styles.itemBase}>{workout.reps}</Text>
-          <Text style={styles.itemBase} onPress={() => this.changeWeight(workout)}>{workout.weight}</Text>
-          <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
-        </View>
-      );
+      if(!this.state.editable) {
+        return (
+          <View key={_.uniqueId()} style={styles.row}>
+            <Text style={styles.itemName}>{workout.name}</Text>
+            <Text style={styles.itemBase}>{workout.reps}</Text>
+            <Text style={styles.itemBase} onPress={() => this.setState({editable: true})}>{workout.weight}</Text>
+            <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
+          </View>
+        );
+      } else {
+        return (
+          <View key={_.uniqueId()} style={styles.row}>
+            <Text style={styles.itemName}>{workout.name}</Text>
+            <Text style={styles.itemBase}>{workout.reps}</Text> 
+            <TextInput keyboardType='numeric' style={styles.itemBase} onSubmitEditing={(event) => this.changeWeight(event, workout)}></TextInput>
+            <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
+          </View>
+        );
+      }
     });
 
     return (
@@ -42,11 +59,13 @@ export default class List extends React.Component {
       </View>
     );
   }
-
-  changeWeight(item) {
-    let workout = Object.assign({}, item);
-    workout.weight = 100;
-    this.props.handleChange(workout);
+  
+  changeWeight(event, item) {
+      let workout = Object.assign({}, item);
+      let value = event.nativeEvent.text;
+      workout.weight = value;
+      this.props.handleChange(workout);
+      this.setState({editable: false});
   }
 }
 

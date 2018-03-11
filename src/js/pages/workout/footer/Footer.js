@@ -23,10 +23,16 @@ export default class Footer extends React.Component {
   }
 
   render() {
-    if(!this.props.askName) {
+    if(!this.props.askName && !this.props.showInit) {
       return (
       <View style={styles.container}>
-        <Button title="Tallenna treenis boi!" onPress={this.handleSubmit.bind(this)}>Moro</Button>
+        <Button title="Valmis" onPress={this.handleSubmit.bind(this)}/>
+      </View>
+      );
+    } else if(this.props.showInit) {
+      return(
+      <View>
+        <Button title="Uusi treeni" onPress={this.props.initNew}/>
       </View>
       );
     } else {

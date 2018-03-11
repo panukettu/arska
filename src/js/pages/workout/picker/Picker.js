@@ -21,7 +21,7 @@ export default class RoutinePicker extends React.Component {
   }
 
   handleSubmit() {
-    this.props.handleDelete();
+    this.props.deleteRoutine();
   }
 
   render() {

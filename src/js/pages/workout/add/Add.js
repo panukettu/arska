@@ -36,7 +36,7 @@ export default class Add extends React.Component {
         </View>
       );
     } else {
-      return <Button title="Uusi treeni?" onPress={this.props.initNew}/>;
+      return null;
     }
   }
 

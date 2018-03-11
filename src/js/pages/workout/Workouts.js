@@ -26,9 +26,9 @@ export default class Workouts extends React.Component {
     return (
       <View style={styles.container}>
         <Add add={this.add.bind(this)} shouldRender={this.state.currentRoutine} initNew={this.init.bind(this)}/>
-        <RoutinePicker routines={this.state.routines} handleChange={this.set.bind(this)} handleDelete={this.deleteRoutine.bind(this)}/>
+        <RoutinePicker routines={this.state.routines} handleChange={this.set.bind(this)} deleteRoutine={this.deleteRoutine.bind(this)}/>
         <List remove={this.remove.bind(this)} workouts={this.state.workouts}/>
-        <Footer askName={this.state.askRoutineName} handleSubmit={this.save.bind(this)}/>
+        <Footer askName={this.state.askRoutineName} handleSubmit={this.save.bind(this)} showInit={this.state.currentRoutine} initNew={this.init.bind(this)}/>
       </View>
     );
   }

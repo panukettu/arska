@@ -26,3 +26,11 @@ export const removeRoutine = (id) => {
     AsyncStorage.setItem('routines', JSON.stringify(res));
   });
 }
+
+export const updateRoutine = (routine) => {
+  getRoutines().then(res => {
+    let index = res.findIndex(r => r.id === routine.id);
+    res[index] = routine;
+    AsyncStorage.setItem('routines', JSON.stringify(res));
+  });
+}

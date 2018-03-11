@@ -29,7 +29,7 @@ export default class List extends React.Component {
         <View key={_.uniqueId()} style={styles.row}>
           <Text style={styles.itemName}>{workout.name}</Text>
           <Text style={styles.itemBase}>{workout.reps}</Text>
-          <Text style={styles.itemBase}>{workout.weight}</Text>
+          <Text style={styles.itemBase} onPress={() => this.changeWeight(workout)}>{workout.weight}</Text>
           <Button color={Colors.Red} title=" x " onPress={() => this.props.remove(workout)}></Button>
         </View>
       );
@@ -41,6 +41,12 @@ export default class List extends React.Component {
         {list}
       </View>
     );
+  }
+
+  changeWeight(item) {
+    let workout = Object.assign({}, item);
+    workout.weight = 100;
+    this.props.handleChange(workout);
   }
 }
 

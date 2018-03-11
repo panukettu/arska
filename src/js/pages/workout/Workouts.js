@@ -2,12 +2,13 @@ import React from 'react';
 import {StyleSheet, View, Button, AsyncStorage, Text, Modal, Picker} from 'react-native';
 
 import _ from 'lodash';
+import update from 'immutability-helper';
 
 import Add from './add/Add';
 import Footer from './footer/Footer';
 import List from './list/List';
 import RoutinePicker from './picker/Picker';
-import { setRoutine, getRoutines, removeRoutine } from './storage/Storage';
+import { setRoutine, getRoutines, removeRoutine, updateRoutine } from './storage/Storage';
 
 
 export default class Workouts extends React.Component {
@@ -27,7 +28,7 @@ export default class Workouts extends React.Component {
       <View style={styles.container}>
         <Add add={this.add.bind(this)} shouldRender={this.state.currentRoutine} initNew={this.init.bind(this)}/>
         <RoutinePicker routines={this.state.routines} handleChange={this.set.bind(this)} deleteRoutine={this.deleteRoutine.bind(this)}/>
-        <List remove={this.remove.bind(this)} workouts={this.state.workouts}/>
+        <List remove={this.remove.bind(this)} workouts={this.state.workouts} handleChange={this.handleChange.bind(this)}/>
         <Footer askName={this.state.askRoutineName} handleSubmit={this.save.bind(this)} showInit={this.state.currentRoutine} initNew={this.init.bind(this)}/>
       </View>
     );
@@ -61,7 +62,7 @@ export default class Workouts extends React.Component {
   remove(workout) {
       // clone the array since it's used as a datasource
       let workouts = this.state.workouts.slice();
-      let index = workouts.findIndex(w => w.name == workout.name);
+      let index = workouts.findIndex(w => w.name === workout.name);
       workouts.splice(index, 1);
       this.setState({workouts});
   }
@@ -108,6 +109,34 @@ export default class Workouts extends React.Component {
 
     removeRoutine(this.state.currentRoutine.id);
 
+  }
+
+  updateAndSave(routine) {
+    console.log('UpdateAndSave calling updateRoutine with: ' + JSON.stringify(routine));
+    updateRoutine(routine);
+    let routines = this.state.routines.slice();
+    let index = routines.findIndex(r => r.id === routine.id);
+    routines[index] = routine;
+    this.setState({routines, currentRoutine: routine, workouts: routine.workouts});
+  }
+
+  handleChange(item) {
+    console.log('HandleChange CALLED: ' + item);
+    
+    if(this.state.currentRoutine) {
+      let workouts = this.state.workouts.slice();
+      let index = workouts.findIndex(w => w.name == item.name);
+      workouts[index] = item;
+      
+      console.log('HandleChange workouts to push: ' + JSON.stringify(workouts));
+      const currentRoutine = update(this.state.currentRoutine, {
+        workouts: {$set: workouts}
+      });
+
+      console.log('HandleChange routine afte UPDATE: ' + JSON.stringify(currentRoutine));
+
+      this.updateAndSave(currentRoutine);
+    }
   }
 }
 

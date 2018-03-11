@@ -1,5 +1,15 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
-  }
+    "name": "Arska",
+    "icon": "./icon.png",
+    "version": "1.0.0",
+    "slug": "arska",
+    "sdkVersion": "25.0.0",
+    "ios": {
+      "bundleIdentifier": "com.kalmaindustries.arska"
+    },
+    "android": {
+      "package": "com.kalmaindustries.arska"
+    }
+   }
 }
